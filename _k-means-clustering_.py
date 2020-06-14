@@ -100,9 +100,7 @@ def preprocess():
 
     print("Loading the Data frame and building the model COMPLETED.")
     print(" *** Number of clusters k = " + str(int(runs_box.get())))
-    messagebox.showinfo(root.title(), "Preprocessing completed successfully! using train-set is done!")
-
-    cluster.config(state='normal')
+    messagebox.showinfo(root.title(), "Preprocessing completed successfully!")
 
 
 def draw_scatter(self):
@@ -124,9 +122,9 @@ def run_model(self):
     parent.overrideredirect(1) 
     parent.withdraw()  
     try:
-        num_of_clusters = int(self.cluster_box.get())
-        num_of_runs = int(self.runs_box.get())
-        df_no_country = self.dataset.drop(['country'], axis=1)
+        num_of_clusters = int(cluster_box.get())
+        num_of_runs = int(runs_box.get())
+        df_no_country = df.drop(['country'], axis=1)
         labels = KMeans(n_clusters=num_of_clusters, n_init=num_of_runs, random_state=4).fit_predict(df_no_country)
         self.dataset["Cluster"] = labels
         draw_scatter(self)

@@ -1,10 +1,10 @@
 <img src="https://in.bgu.ac.il/marketing/graphics/BGU.sig3-he-en-white.png" height="48px" align="right" />  
-<img src=https://res.cloudinary.com/serfati/image/upload/v1589354855/icon_iqs8if.png height="120"/>  
+<img src=https://storage.googleapis.com/aihub-c2t-containers-public/release-0.2.0/kfp-components/oob_algorithm/kmeans/assets/kmeans.png height="120"/>  
 
   
 ![](https://codeclimate.com/github/JonSn0w/Hyde/badges/gpa.svg)   ![](https://img.shields.io/badge/version-0.1.0-blueviolet)  ![](https://img.shields.io/apm/l/atomic-design-ui.svg?)  
 # Description  
-K means clustering written by Python using Pandas and Scikit for manipuliate the csv data set. 
+K means clustering written by Python using Pandas and Scikit for manipuliate the xlsx data set. 
 
 ## ⚠️ Prerequisites  
   
@@ -33,18 +33,17 @@ You can modify or contribute to this project by following the steps below:
   
  ```bash  
  # run 
- $> py k-means-clustering.py
-
+ $> python _k-means-clustering_.py
  ```  
 
 3. Choose a path include the files that in /dir
   
-        dataset.xslx (the data set for the K Means Algorithm you would like to cluster)
+        dataset.xlsx (the data set for the K Means Algorithm you would like to cluster)
   
 
-4. Click **"Preprocces"** and wait serval of minutes till success message will apear.
+4. Click **"Preprocces"** and wait serval of seconds till success message will appear.
 
-5. Click **"Cluster"
+5. Click **"Cluster"**
   
 ---  
   
