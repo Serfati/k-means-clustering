@@ -1,0 +1,22 @@
+﻿The World Happiness Report is a landmark survey of the state of global happiness. The first report was published in 2012, the second in 2013, the third in 2015, and the fourth in the 2016 Update. 
+The World Happiness 2017, which ranks 155 countries by their happiness levels, was released at the United Nations at an event celebrating International Day of Happiness on March 20th. 
+The report continues to gain global recognition as governments, organizations and civil society increasingly use happiness indicators to inform their policy-making decisions. 
+Leading experts across fields – economics, psychology, survey analysis, national statistics, health, public policy and more – describe how measurements of well-being can be used effectively to assess the progress of nations. 
+The reports review the state of happiness in the world today and show how the new science of happiness explains personal and national variations in happiness.
+
+country - Country
+year - Year
+life_ladder - Happiness score or subjective well-being (variable name ladder).
+log_gdp_per_capita - Statistics of GDP per capita (variable name gdp) in purchasing power parity (PPP) at constant 2011 int. dollar prices
+social_support - Social support (or having someone to count on in times of trouble) is the national avg of the binary responses (0 or 1)
+healthy_life_expectancy_at_birth - The time series of healthy life expectancy at birth calculated by WHO, WDI, and other published stats
+freedom_to_make_life_choices - National avg responses to “Are you satisfied or dissatisfied with your freedom to choose what you do with your life?"
+generosity - National avg responses to “Have you donated money to a charity in the past month?” on GDP per capita
+perceptions_of_corruption - Avg response to “Is corruption widespread throughout the government...” “Is corruption widespread within businesses...”
+positive_affect - The average of three positive affect measures in GWP: happiness, laugh and enjoyment in the Gallup World Poll waves 3-7
+negative_affect - The average of three negative affect measures in GWP, worry, sadness and anger
+confidence_in_national_government - From the GWP “Do you have confidence in each of the following, or not? How about the national government?"
+democratic_quality - Based on Worldwide Governance Indicators (WGI) project (Kaufmann, Kraay and Mastruzzi)
+delivery_quality - Based on Worldwide Governance Indicators (WGI) project (Kaufmann, Kraay and Mastruzzi)
+standard_deviation_of_ladder_by_country_year - Alternative measures of inequality in happiness scores by year
+standard_deviation_mean_of_ladder_by_country_year - Alternative measures of inequality in happiness scores by year
