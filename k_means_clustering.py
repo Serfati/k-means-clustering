@@ -93,7 +93,7 @@ def preprocess():
     # fill missing values
     df = fill_missing_values()
 
-    # Normalize numeric values values
+    # Normalize numeric values
     df = standardization()
 
     print("Loading the Data frame and building the model COMPLETED.")
