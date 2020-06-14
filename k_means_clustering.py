@@ -67,43 +67,43 @@ def is_build_allowed():
     cluster.config(state='disabled')
 
 
-def fill_missing_values(df):
-    global attribute_dic
-
-    for key in attribute_dic.keys():
-        if attribute_dic[key] == ['NUMERIC']:
-            df[key].fillna(df[key].mean(), inplace=True)
-        else:  # categorical values
-            df[key].fillna(df[key].mode()[0], inplace=True)
+def fill_missing_values():
+    global df
+    df = df.fillna(df.mean(), inplace=True)
     return df
 
 
-def normalize_numeric_values(df):
-    global attribute_dic
-
-    for key in attribute_dic.keys():
-        if attribute_dic[key] == ['NUMERIC']:
-            df[key] = (df[key] - df[key].min()) / (df[key].max() - df[key].min())
+def standardization():
+    global df
+    standard = preprocessing.StandardScaler()
+    standard_df = standard.fit_transform(df)
+    df_no_country = pd.DataFrame(standard_df, columns=df.columns)
+    df = pd.concat([pd.DataFrame(df["country"]), df_no_country], axis=1)
+    df = df.groupby(['country'], as_index=False).mean()
+    df = df.drop(['year'], axis=1)
     return df
 
 
 def preprocess():
+    global df
     df = pd.read_excel(dir_path_box.get() + "/Dataset.xlsx")  # Loading train file
 
     df = df.drop(['country'], axis=1)
 
     # fill missing values
-    df = fill_missing_values(df)
+    df = fill_missing_values()
 
     # Normalize numeric values values
-    df = normalize_numeric_values(df)
+    df = standardization()
 
     print("Loading the Data frame and building the model COMPLETED.")
     print(" *** Number of clusters k = " + str(int(runs_box.get())))
     messagebox.showinfo(root.title(), "Preprocessing completed successfully!")
+    return df
 
 
-def draw_scatter(df):
+def draw_scatter():
+    global df
     x = df["Social support"]
     y = df["Generosity"]
     plt.scatter(x, y, c=df["Cluster"], cmap='viridis')
@@ -113,11 +113,13 @@ def draw_scatter(df):
     plt.show()
 
 
-def draw_map(df):
+def draw_map():
+    global df
     pass
 
 
 def run_model():
+    global df
     parent = tkinter.Tk()  
     parent.overrideredirect(1) 
     parent.withdraw()  
@@ -127,8 +129,8 @@ def run_model():
         df_no_country = df.drop(['country'], axis=1)
         labels = KMeans(n_clusters=num_of_clusters, n_init=num_of_runs, random_state=4).fit_predict(df_no_country)
         df["Cluster"] = labels
-        draw_scatter(df)
-        draw_map(df)
+        draw_scatter()
+        draw_map()
     except Exception as e:
         print(e)
 
@@ -196,10 +198,7 @@ cluster["width"] = 20
 cluster.grid(row=3, column=2, pady=(0, 20))
 cluster.config(state='disabled')
 
-# Global Variables
-attribute_dic = {}  # attribute_dic = mapping between each attribute and its possible values
-bins = {}  # bins = mapping between each numeric attribute and its intervals that define its discretization
-train = pd.DataFrame()  # train data-frame
+df = pd.DataFrame()
 
 # MAIN:
 # ----
