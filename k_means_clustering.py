@@ -1,4 +1,5 @@
 import os
+import tkinter
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import warnings
@@ -6,15 +7,20 @@ from tkinter import *
 
 import matplotlib as plt
 import pandas as pd
+import plotly.graph_objs as go
+import plotly.plotly as py
 from sklearn import preprocessing
+from sklearn.cluster import KMeans
 
 root = Tk()
 warnings.filterwarnings('ignore')
 
 
-def browse_dir_path():
-    chosen_dir = filedialog.askdirectory()
-    dir_path_box.insert(0, chosen_dir)
+def browse_file_path():
+    chosen_file = filedialog.askopenfile(parent=root, mode='rb', title='Choose a file')
+    if chosen_file is not None:
+        chosen_file.close()
+        file_path.set(chosen_file.name)
 
 
 def is_valid_path(sp):
@@ -36,24 +42,23 @@ def is_number(n):
 def is_not_empty_file(f, _type):
     if _type == "xlsx":
         try:
-            pd.ExcelFile(f)
+            pd.read_excel(f)
         finally:
             return False
     return True
 
 
 def is_build_allowed():
-    dp = dir_path.get()
-    bn = clusters_num.get()
-    structure_path = dp + "/Dataset.xlsx"
+    cn = cluster_box.get()
+    structure_path = file_path.get()
     error_msg = ""
-    if bn and dp:
+    if cn and structure_path:
         if not is_valid_path(structure_path):
             error_msg += "ERROR: Wrong dir or missing files.\n"
         else:
-            if not is_not_empty_file(structure_path, "xlsx"):
+            if is_not_empty_file(structure_path, "xlsx"):
                 error_msg += "ERROR: Some files are empty.\n"
-        if not is_number(bn):
+        if not is_number(cn):
             error_msg += "ERROR: Illegal number of clusters k.\n"
         if error_msg == "":
             build.config(state='normal')
@@ -62,7 +67,6 @@ def is_build_allowed():
             build.config(state='disabled')
     else:
         build.config(state='disabled')
-
     cluster.config(state='disabled')
 
 
@@ -78,6 +82,7 @@ def standardization():
     standard_df = standard.fit_transform(df)
 
     df_no_country = pd.DataFrame(standard_df, columns=df.columns)
+    df_no_country = df.drop(['country'], axis=1)
     df = pd.concat([pd.DataFrame(df["country"]), df_no_country], axis=1)
 
     df = df.groupby(['country'], as_index=False).mean()
@@ -87,22 +92,23 @@ def standardization():
 def preprocess():
     global df
     global df_no_country
-    df = pd.read_excel(dir_path_box.get() + "/Dataset.xlsx")  # Loading train file
-
-    df_no_country = df.drop(['country'], axis=1)
+    # Loading xlsx file
+    df = pd.read_excel(file_path.get())
 
     # fill missing values
     fill_missing_values()
 
-    # Normalize numeric values
-    standardization()
+    # # Normalize numeric values
+    # standardization()
 
     print("Loading the Data frame and building the model COMPLETED.")
     print(" *** Number of clusters k = " + str(int(runs_box.get())))
     messagebox.showinfo(root.title(), "Preprocess completed successfully!")
+    cluster.config(state='normal')
     return df
 
 
+# noinspection PyUnresolvedReferences
 def draw_scatter():
     global df
     x = df["Social support"]
@@ -116,15 +122,46 @@ def draw_scatter():
 
 def draw_map():
     global df
+    choropleth = go.Figure(data=go.Choropleth(
+        locations=df['Cluster'],
+        text=df['Country'],
+        colorscale='Blues',
+        autocolorscale=False,
+        reversescale=True,
+        marker='darkgray',
+    ))
+
+    choropleth.update_layout(
+        title_text='Clustering',
+        geo=dict(
+            showframe=False,
+            showcoastlines=False,
+            projection_type='equirectangular'
+        ),
+        annotations=[dict(
+            x=0.55,
+            y=0.1,
+            xref='paper',
+            yref='paper',
+            text='Github Repo: <a href="https://github.com/Serfati/k-means-clustering">\
+                click here</a>',
+            showarrow=False
+        )]
+    )
+
+    choropleth.show()
+
+    py.sign_in('serfati', 'T7Q2E0HWXkrPjM8TtjHD')
+    py.image.save_as(choropleth, filename='k-means-map.png')
     pass
 
 
 def run_model():
     global df
     global df_no_country
-    parent = tkinter.Tk()  
-    parent.overrideredirect(1) 
-    parent.withdraw()  
+    parent = tkinter.Tk()
+    parent.overrideredirect(1)
+    parent.withdraw()
     try:
         num_of_clusters = int(cluster_box.get())
         num_of_runs = int(runs_box.get())
@@ -137,10 +174,10 @@ def run_model():
 
 
 # Following dir path and bins number:
-dir_path = StringVar(root)
+file_path = StringVar(root)
 clusters_num = StringVar(root)
 runs_num = StringVar(root)
-dir_path.trace("w", is_build_allowed)
+file_path.trace("w", is_build_allowed)
 runs_num.trace("w", is_build_allowed)
 clusters_num.trace("w", is_build_allowed)
 
@@ -150,19 +187,19 @@ clusters_num.trace("w", is_build_allowed)
 root.title("K Means Clustering")
 
 # 2
-dir_path_label = Label(root)
-dir_path_label["text"] = "Directory Path"
-dir_path_label.grid(row=0, column=0, sticky='e', padx=(20, 10), pady=(20, 5))
+file_path_label = Label(root)
+file_path_label["text"] = "Directory Path"
+file_path_label.grid(row=0, column=0, sticky='e', padx=(20, 10), pady=(20, 5))
 
 # 3
-dir_path_box = Entry(root, textvariable=dir_path)
-dir_path_box["width"] = 50
-dir_path_box.grid(row=0, column=1, sticky='w', padx=(0, 10), pady=(20, 5))
+file_path_box = Entry(root, textvariable=file_path)
+file_path_box["width"] = 50
+file_path_box.grid(row=0, column=1, sticky='w', padx=(0, 10), pady=(20, 5))
 
 # 4
 browse = Button(root)
 browse["text"] = "Browse"
-browse["command"] = browse_dir_path
+browse["command"] = browse_file_path
 browse.grid(row=0, column=2, padx=(10, 20), pady=(20, 5))
 
 # 5

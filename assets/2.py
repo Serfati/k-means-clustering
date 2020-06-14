@@ -3,7 +3,7 @@ import numpy as np
 
 print("\n --- Question #1 ---")
 print("\n Loading train_Loan.csv")
-df = pd.read_csv("path-to/train_Loan.csv")
+df = pd.read_csv("/home/serfati/Desktop/DS/Labs/lab_9/train_Loan.csv")
 
 print("\n --- Question #2 ---")
 print("\n Adding new column 'NormalizedIncome' using numpy and applying appropriate lambda function")

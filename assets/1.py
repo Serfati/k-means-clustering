@@ -22,7 +22,7 @@ def binning(col, cut_points, labels=None):
 
 print("\n --- Question #1 ---")
 print("\n Loading train_Loan.csv")
-df = pd.read_csv("path-to-file/train_Loan.csv")             # Reading the dataset in a dataframe using Pandas
+df = pd.read_csv("/home/serfati/Desktop/DS/Labs/lab_9/train_Loan.csv")             # Reading the dataset in a dataframe using Pandas
 
 print("\n --- Question #2 ---")
 keys=list(df.keys())

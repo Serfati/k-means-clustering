@@ -55,7 +55,7 @@ def visualize_tree(tree, feature_names):
 
 
 # Reading the dataset in a dataframe using Pandas
-df = pd.read_csv("path-to-file/train_Loan.csv")
+df = pd.read_csv("/home/serfati/Desktop/DS/Labs/lab_9/train_Loan.csv")
 var_mod = ['Gender', 'Married', 'Dependents', 'Education', 'Self_Employed', 'Property_Area', 'Loan_Status']
 le = LabelEncoder()
 
