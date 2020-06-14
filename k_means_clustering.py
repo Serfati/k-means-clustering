@@ -1,9 +1,11 @@
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.preprocessing import LabelEncoder
+from sklearn import preprocessing
 from tkinter import *
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
+import matplotlib as plt
 import os
 import numpy as np
 import pandas as pd
@@ -70,35 +72,37 @@ def is_build_allowed():
 def fill_missing_values():
     global df
     df = df.fillna(df.mean(), inplace=True)
-    return df
 
 
 def standardization():
     global df
+    global df_no_country
     standard = preprocessing.StandardScaler()
     standard_df = standard.fit_transform(df)
+
     df_no_country = pd.DataFrame(standard_df, columns=df.columns)
     df = pd.concat([pd.DataFrame(df["country"]), df_no_country], axis=1)
+
     df = df.groupby(['country'], as_index=False).mean()
     df = df.drop(['year'], axis=1)
-    return df
 
 
 def preprocess():
     global df
+    global df_no_country
     df = pd.read_excel(dir_path_box.get() + "/Dataset.xlsx")  # Loading train file
 
-    df = df.drop(['country'], axis=1)
+    df_no_country = df.drop(['country'], axis=1)
 
     # fill missing values
-    df = fill_missing_values()
+    fill_missing_values()
 
     # Normalize numeric values
-    df = standardization()
+    standardization()
 
     print("Loading the Data frame and building the model COMPLETED.")
     print(" *** Number of clusters k = " + str(int(runs_box.get())))
-    messagebox.showinfo(root.title(), "Preprocessing completed successfully!")
+    messagebox.showinfo(root.title(), "Preprocess completed successfully!")
     return df
 
 
@@ -120,13 +124,13 @@ def draw_map():
 
 def run_model():
     global df
+    global df_no_country
     parent = tkinter.Tk()  
     parent.overrideredirect(1) 
     parent.withdraw()  
     try:
         num_of_clusters = int(cluster_box.get())
         num_of_runs = int(runs_box.get())
-        df_no_country = df.drop(['country'], axis=1)
         labels = KMeans(n_clusters=num_of_clusters, n_init=num_of_runs, random_state=4).fit_predict(df_no_country)
         df["Cluster"] = labels
         draw_scatter()
@@ -199,6 +203,7 @@ cluster.grid(row=3, column=2, pady=(0, 20))
 cluster.config(state='disabled')
 
 df = pd.DataFrame()
+df_no_country = pd.DataFrame()
 
 # MAIN:
 # ----
