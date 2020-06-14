@@ -103,21 +103,21 @@ def preprocess():
     messagebox.showinfo(root.title(), "Preprocessing completed successfully!")
 
 
-def draw_scatter(self):
-    x = self.dataset["Social support"]
-    y = self.dataset["Generosity"]
-    plt.scatter(x, y, c=self.dataset["Cluster"], cmap='viridis')
+def draw_scatter(df):
+    x = df["Social support"]
+    y = df["Generosity"]
+    plt.scatter(x, y, c=df["Cluster"], cmap='viridis')
     plt.xlabel("social_support")
     plt.ylabel("Generosity")
     plt.title("K Means Clustering")
     plt.show()
 
 
-def draw_map(self):
+def draw_map(df):
     pass
 
 
-def run_model(self):
+def run_model():
     parent = tkinter.Tk()  
     parent.overrideredirect(1) 
     parent.withdraw()  
@@ -126,9 +126,9 @@ def run_model(self):
         num_of_runs = int(runs_box.get())
         df_no_country = df.drop(['country'], axis=1)
         labels = KMeans(n_clusters=num_of_clusters, n_init=num_of_runs, random_state=4).fit_predict(df_no_country)
-        self.dataset["Cluster"] = labels
-        draw_scatter(self)
-        draw_map(self)
+        df["Cluster"] = labels
+        draw_scatter(df)
+        draw_map(df)
     except Exception as e:
         print(e)
 

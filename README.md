@@ -33,7 +33,7 @@ You can modify or contribute to this project by following the steps below:
   
  ```bash  
  # run 
- $> python _k-means-clustering_.py
+ $> python k-means-clustering.py
  ```  
 
 3. Choose a path include the files that in /dir
