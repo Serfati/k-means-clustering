@@ -1,15 +1,12 @@
-from sklearn.metrics import accuracy_score
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.preprocessing import LabelEncoder
-from sklearn import preprocessing
-from tkinter import *
+import os
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
-import matplotlib as plt
-import os
-import numpy as np
-import pandas as pd
 import warnings
+from tkinter import *
+
+import matplotlib as plt
+import pandas as pd
+from sklearn import preprocessing
 
 root = Tk()
 warnings.filterwarnings('ignore')
