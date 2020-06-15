@@ -1,5 +1,4 @@
 import os
-import tkinter
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import warnings
@@ -125,46 +124,34 @@ def draw_scatter():
     plt.scatter(x, y, c=df["Cluster"], cmap='viridis')
     plt.xlabel("social_support")
     plt.ylabel("Generosity")
-    plt.title("K Means Clustering")
+    plt.title("K-Means Clustering")
     plt.show()
 
 
 def draw_map():
     global df
     py.sign_in('serfati', 'T7Q2E0HWXkrPjM8TtjHD')
-    choropleth = go.Choropleth(z=df['Social support'], locations=df['Cluster'])
-    layout = go.Layout(title='Clustering', geo={'scope': 'world'})
+    text_labels = df['country'].astype(str) + "<br>Cluster Number: " + df['Cluster'].astype(str)
+
+    choropleth = go.Choropleth(z=df['Cluster'],
+                               locations=df['country'],
+                               locationmode='country names',
+                               colorscale='Viridis',
+                               marker_line_color='black',
+                               marker_line_width=0.5,
+                               text=text_labels)
+
+    layout = go.Layout(title='K-Means Clustering Visualization',
+                       title_x=0.5,
+                       geo=dict(
+                           showframe=False,
+                           showcoastlines=False,
+                           projection_type='equirectangular'
+                       ))
+
     figure = go.Figure(data=[choropleth], layout=layout)
     py.plot(figure)
-    # py.image.save_as(figure, filename='k-means-map.png')
-
-    # choropleth = go.Figure(data=go.Choropleth(
-    #     locations=df['country'],
-    #     text=df['country'],
-    #     colorscale='Blues',
-    #     autocolorscale=False,
-    #     reversescale=True
-    # ))
-    #
-    # choropleth.update_layout(
-    #     title_text='Clustering',
-    #     geo=dict(
-    #         showframe=False,
-    #         showcoastlines=False,
-    #         projection_type='equirectangular'
-    #     ),
-    #     annotations=[dict(
-    #         x=0.55,
-    #         y=0.1,
-    #         xref='paper',
-    #         yref='paper',
-    #         text='Github Repo: <a href="https://github.com/Serfati/k-means-clustering">\
-    #             click here</a>',
-    #         showarrow=False
-    #     )]
-    # )
-
-    # choropleth.show()
+    # py.image.save_as(figure, filename='choromap.png') # TODO remove comment before assign!
 
 
 def run_model():
