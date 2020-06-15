@@ -44,6 +44,11 @@ You can modify or contribute to this project by following the steps below:
 4. Click **"Preprocces"** and wait serval of seconds till success message will appear.
 
 5. Click **"Cluster"**
+
+### Screenshots
+
+<img src="https://res.cloudinary.com/serfati/image/upload/v1592216661/choromap-reds_jwdape.png" height="400"/>
+<img src="https://res.cloudinary.com/serfati/image/upload/v1592216963/scatter_ynz37v.jpg"/>
   
 ---  
   
