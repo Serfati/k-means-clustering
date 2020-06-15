@@ -131,36 +131,40 @@ def draw_scatter():
 
 def draw_map():
     global df
-    choropleth = go.Figure(data=go.Choropleth(
-        locations=df['Cluster'],
-        text=df['country'],
-        colorscale='Blues',
-        autocolorscale=False,
-        reversescale=True
-    ))
-
-    choropleth.update_layout(
-        title_text='Clustering',
-        geo=dict(
-            showframe=False,
-            showcoastlines=False,
-            projection_type='equirectangular'
-        ),
-        annotations=[dict(
-            x=0.55,
-            y=0.1,
-            xref='paper',
-            yref='paper',
-            text='Github Repo: <a href="https://github.com/Serfati/k-means-clustering">\
-                click here</a>',
-            showarrow=False
-        )]
-    )
-
-    choropleth.show()
-
     py.sign_in('serfati', 'T7Q2E0HWXkrPjM8TtjHD')
-    py.image.save_as(choropleth, filename='k-means-map.png')
+    choropleth = go.Choropleth(z=df['Social support'], locations=df['Cluster'])
+    layout = go.Layout(title='Clustering', geo={'scope': 'world'})
+    figure = go.Figure(data=[choropleth], layout=layout)
+    py.plot(figure)
+    # py.image.save_as(figure, filename='k-means-map.png')
+
+    # choropleth = go.Figure(data=go.Choropleth(
+    #     locations=df['country'],
+    #     text=df['country'],
+    #     colorscale='Blues',
+    #     autocolorscale=False,
+    #     reversescale=True
+    # ))
+    #
+    # choropleth.update_layout(
+    #     title_text='Clustering',
+    #     geo=dict(
+    #         showframe=False,
+    #         showcoastlines=False,
+    #         projection_type='equirectangular'
+    #     ),
+    #     annotations=[dict(
+    #         x=0.55,
+    #         y=0.1,
+    #         xref='paper',
+    #         yref='paper',
+    #         text='Github Repo: <a href="https://github.com/Serfati/k-means-clustering">\
+    #             click here</a>',
+    #         showarrow=False
+    #     )]
+    # )
+
+    # choropleth.show()
 
 
 def run_model():
