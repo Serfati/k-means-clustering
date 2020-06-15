@@ -5,7 +5,7 @@ import tkinter.messagebox as messagebox
 import warnings
 from tkinter import *
 
-import matplotlib as plt
+from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.plotly as py
@@ -48,64 +48,73 @@ def is_not_empty_file(f, _type):
     return True
 
 
-def is_build_allowed():
-    cn = cluster_box.get()
-    structure_path = file_path.get()
-    error_msg = ""
-    if cn and structure_path:
-        if not is_valid_path(structure_path):
-            error_msg += "ERROR: Wrong dir or missing files.\n"
+def is_build_allowed(*args):
+    try:
+        cn = cluster_box.get()
+        structure_path = file_path.get()
+        error_msg = ""
+        if cn and structure_path:
+            if not is_valid_path(structure_path):
+                error_msg += "ERROR: Wrong dir or missing files.\n"
+            else:
+                if is_not_empty_file(structure_path, "xlsx"):
+                    error_msg += "ERROR: Some files are empty.\n"
+            if not is_number(cn):
+                error_msg += "ERROR: Illegal number of clusters k.\n"
+            if error_msg == "":
+                build.config(state='normal')
+            else:
+                messagebox.showerror(root.title(), error_msg + "\nPLEASE TRY AGAIN...")
+                build.config(state='disabled')
         else:
-            if is_not_empty_file(structure_path, "xlsx"):
-                error_msg += "ERROR: Some files are empty.\n"
-        if not is_number(cn):
-            error_msg += "ERROR: Illegal number of clusters k.\n"
-        if error_msg == "":
-            build.config(state='normal')
-        else:
-            messagebox.showerror(root.title(), error_msg + "\nPLEASE TRY AGAIN...")
             build.config(state='disabled')
-    else:
-        build.config(state='disabled')
-    cluster.config(state='disabled')
+        cluster.config(state='disabled')
+    except Exception as e:
+        raise e
 
 
 def fill_missing_values():
     global df
-    df = df.fillna(df.mean(), inplace=True)
+    df = df.fillna(df.mean())
 
 
 def standardization():
     global df
     global df_no_country
-    standard = preprocessing.StandardScaler()
-    standard_df = standard.fit_transform(df)
+    try:
+        df_no_country = df.drop(['country'], axis=1)
 
-    df_no_country = pd.DataFrame(standard_df, columns=df.columns)
-    df_no_country = df.drop(['country'], axis=1)
-    df = pd.concat([pd.DataFrame(df["country"]), df_no_country], axis=1)
+        standard = preprocessing.StandardScaler()
+        standard_df = standard.fit_transform(df_no_country)
 
-    df = df.groupby(['country'], as_index=False).mean()
-    df = df.drop(['year'], axis=1)
+        df_no_country = pd.DataFrame(standard_df, columns=df_no_country.columns)
+        df = pd.concat([pd.DataFrame(df["country"]), df_no_country], axis=1)
+
+        df = df.groupby(['country'], as_index=False).mean()
+        df = df.drop(['year'], axis=1)
+    except Exception as e:
+        raise e
 
 
 def preprocess():
-    global df
-    global df_no_country
-    # Loading xlsx file
-    df = pd.read_excel(file_path.get())
+    try:
+        global df
 
-    # fill missing values
-    fill_missing_values()
+        # Loading xlsx file
+        df = pd.read_excel(file_path.get())
 
-    # # Normalize numeric values
-    # standardization()
+        # fill missing values
+        fill_missing_values()
 
-    print("Loading the Data frame and building the model COMPLETED.")
-    print(" *** Number of clusters k = " + str(int(runs_box.get())))
-    messagebox.showinfo(root.title(), "Preprocess completed successfully!")
-    cluster.config(state='normal')
-    return df
+        # # Normalize numeric values
+        standardization()
+
+        print("Loading the Data frame and building the model COMPLETED.")
+        print(" *** Number of clusters k = " + str(int(cluster_box.get())))
+        messagebox.showinfo(root.title(), "Preprocess completed successfully!")
+        cluster.config(state='normal')
+    except Exception as e:
+        raise e
 
 
 # noinspection PyUnresolvedReferences
@@ -124,11 +133,10 @@ def draw_map():
     global df
     choropleth = go.Figure(data=go.Choropleth(
         locations=df['Cluster'],
-        text=df['Country'],
+        text=df['country'],
         colorscale='Blues',
         autocolorscale=False,
-        reversescale=True,
-        marker='darkgray',
+        reversescale=True
     ))
 
     choropleth.update_layout(
@@ -153,16 +161,13 @@ def draw_map():
 
     py.sign_in('serfati', 'T7Q2E0HWXkrPjM8TtjHD')
     py.image.save_as(choropleth, filename='k-means-map.png')
-    pass
 
 
 def run_model():
     global df
     global df_no_country
-    parent = tkinter.Tk()
-    parent.overrideredirect(1)
-    parent.withdraw()
     try:
+        df_no_country = df.drop(['country'], axis=1)
         num_of_clusters = int(cluster_box.get())
         num_of_runs = int(runs_box.get())
         labels = KMeans(n_clusters=num_of_clusters, n_init=num_of_runs, random_state=4).fit_predict(df_no_country)
@@ -170,7 +175,7 @@ def run_model():
         draw_scatter()
         draw_map()
     except Exception as e:
-        print(e)
+        raise e
 
 
 # Following dir path and bins number:
