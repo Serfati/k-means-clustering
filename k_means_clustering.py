@@ -105,7 +105,7 @@ def preprocess():
         # fill missing values
         fill_missing_values()
 
-        # # Normalize numeric values
+        # Normalize numeric values
         standardization()
 
         print("Loading the Data frame and building the model COMPLETED.")
@@ -114,6 +114,10 @@ def preprocess():
         cluster.config(state='normal')
     except Exception as e:
         raise e
+
+
+def draw_graphs():
+    global df
 
 
 # noinspection PyUnresolvedReferences
@@ -130,7 +134,7 @@ def draw_scatter():
 
 def draw_map():
     global df
-    py.sign_in('serfati', 'T7Q2E0HWXkrPjM8TtjHD')
+    py.sign_in('serfati', 'i7Q02m0PRgUQypNuHtbE')
     text_labels = df['country'].astype(str) + "<br>Cluster Number: " + df['Cluster'].astype(str)
 
     choropleth = go.Choropleth(z=df['Cluster'],
@@ -163,10 +167,18 @@ def run_model():
         num_of_runs = int(runs_box.get())
         labels = KMeans(n_clusters=num_of_clusters, n_init=num_of_runs, random_state=4).fit_predict(df_no_country)
         df["Cluster"] = labels
+        print()
         draw_scatter()
         draw_map()
+        draw_graphs()
+        messagebox.showinfo(root.title(), "Clustering process completed successfully!")
     except Exception as e:
         raise e
+
+
+def quit_program():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        root.destroy()
 
 
 # Following dir path and bins number:
@@ -240,4 +252,5 @@ df_no_country = pd.DataFrame()
 print("-----------------------")
 print("Clustering Application")
 print("-----------------------")
+root.protocol("WM_DELETE_WINDOW", quit_program)
 root.mainloop()
