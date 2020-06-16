@@ -10,6 +10,7 @@ import plotly.graph_objs as go
 import plotly.plotly as py
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 root = Tk()
 warnings.filterwarnings('ignore')
@@ -123,13 +124,14 @@ def draw_graphs():
 # noinspection PyUnresolvedReferences
 def draw_scatter():
     global df
-    x = df["Social support"]
-    y = df["Generosity"]
-    plt.scatter(x, y, c=df["Cluster"], cmap='viridis')
-    plt.xlabel("social_support")
-    plt.ylabel("Generosity")
-    plt.title("K-Means Clustering")
-    plt.show()
+    figure = plt.Figure(figsize=(4, 4), dpi=100)
+    ax = figure.add_subplot(111)
+    ax.set_xlabel('social_support')
+    ax.set_ylabel('Generosity')
+    ax.set_title('K-Means Clustering')
+    ax.scatter(df["Social support"], df["Generosity"], c=df['Cluster'], cmap='viridis')
+    scatter = FigureCanvasTkAgg(figure, root)
+    scatter.get_tk_widget().grid(row=4, column=1, pady=(0, 10))
 
 
 def draw_map():
@@ -169,7 +171,7 @@ def run_model():
         df["Cluster"] = labels
         print()
         draw_scatter()
-        draw_map()
+        # draw_map()
         draw_graphs()
         messagebox.showinfo(root.title(), "Clustering process completed successfully!")
     except Exception as e:
