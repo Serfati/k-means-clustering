@@ -3,7 +3,7 @@ import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import warnings
 from tkinter import *
-
+from PIL import ImageTk, Image
 from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.graph_objs as go
@@ -117,10 +117,6 @@ def preprocess():
         raise e
 
 
-def draw_graphs():
-    global df
-
-
 # noinspection PyUnresolvedReferences
 def draw_scatter():
     global df
@@ -128,10 +124,10 @@ def draw_scatter():
     ax = figure.add_subplot(111)
     ax.set_xlabel('social_support')
     ax.set_ylabel('Generosity')
-    ax.set_title('K-Means Clustering')
+    ax.set_title('Scatter K-Means Clustering ')
     ax.scatter(df["Social support"], df["Generosity"], c=df['Cluster'], cmap='viridis')
     scatter = FigureCanvasTkAgg(figure, root)
-    scatter.get_tk_widget().grid(row=4, column=1, pady=(0, 10))
+    scatter.get_tk_widget().grid(row=4, column=1)
 
 
 def draw_map():
@@ -156,8 +152,14 @@ def draw_map():
                        ))
 
     figure = go.Figure(data=[choropleth], layout=layout)
-    py.plot(figure)
-    # py.image.save_as(figure, filename='choromap.png') # TODO remove comment before assign!
+    # py.plot(figure)
+    py.image.save_as(figure, filename='choromap.png')  # TODO remove comment before assign!
+    img = Image.open("./choromap.png")
+    img = img.resize((500, 400), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(img)
+    panel = Label(root, image=img)
+    panel.image = img
+    panel.grid(row=4, column=2)
 
 
 def run_model():
@@ -171,8 +173,7 @@ def run_model():
         df["Cluster"] = labels
         print()
         draw_scatter()
-        # draw_map()
-        draw_graphs()
+        draw_map()
         messagebox.showinfo(root.title(), "Clustering process completed successfully!")
     except Exception as e:
         raise e
@@ -246,6 +247,7 @@ cluster["width"] = 20
 cluster.grid(row=3, column=2, pady=(0, 20))
 cluster.config(state='disabled')
 
+# 11
 df = pd.DataFrame()
 df_no_country = pd.DataFrame()
 
