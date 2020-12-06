@@ -51,13 +51,6 @@ You can modify or contribute to this project by following the steps below:
   
 ---  
   
-**_Team Members_**:  
-  
-| Name             | Username                                    | Contact Info            |  ID           |  
-| ---------------- | ------------------------------------------- | ----------------------- |  ------------ |
-| _Haim Rayes_     | [HaimReyes](https://github.com/HaimReyes)      | Reyes@post.bgu.ac.il    |  319510475    |
-| _Avihai Serfati_ | [Serfati](https://github.com/serfati)       | serfata@post.bgu.ac.il  |   204520803   |   
-  
 ## ⚖️ License  
   
 This program is free software: you can redistribute it and/or modify it under the terms of the **MIT LICENSE** as published by the Free Software Foundation.  
